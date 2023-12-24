@@ -1,0 +1,42 @@
+/* Root Variables */
+:root {
+    --background: black;
+    --midtone: grey;
+    --foreground: white;
+    --contrast: red;
+    font-size: 2vh;
+    font-family: 'J', 'UVGA', 'Courier New', Courier, monospace;
+}
+
+/* Global Styles */
+html {
+    background: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+    position: fixed;
+    width: 90vh;
+    height: 90vh;
+    overflow: hidden;
+    border: 0.2em solid var(--foreground);
+    border-radius: 2vh;
+    filter: url('#fisheye');
+    isolation: isolate;
+    & * { user-select: none; }
+}
+
+/* - - - - - */
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}

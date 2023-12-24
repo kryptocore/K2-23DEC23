@@ -1,11 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="flex-center">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test</title>
+    <script src="aframe.io_releases_1.2.0_aframe.min.js"></script>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <p>Test</p>
+        <a-scene embedded>
+            <a-entity id="cameraRig" position="0 -1 0">
+                <a-camera wasd-controls="enabled: false"></a-camera>
+            </a-entity>
+            <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+            <a-sky color="#ECECEC"></a-sky>
+        </a-scene>
 </body>
+<svg color-interpolation-filters="sRGB" viewBox="0 0 0 0">
+	<defs>
+		<filter id="chromatic-aberration">
+			<feColorMatrix type="matrix" in="SourceGraphic" result="blue" values="
+				0.000  0.000  0.000  0.000  0.000
+				0.000  1.000  0.000  0.000  0.000 
+				0.000  0.000  1.000  0.000  0.000 
+				0.000  0.000  0.000  1.000  0.000"/>
+			<feOffset in="blue" dx="-1" dy="-1" result="blue_channel"/>
+			<feColorMatrix type="matrix" in="SourceGraphic" result="red" values="
+				1.000  0.000  0.000  0.000  0.000
+				0.000  0.000  0.000  0.000  0.000 
+				0.000  0.000  0.000  0.000  0.000 
+				0.000  0.000  0.000  1.000  0.000"/>
+			<feOffset in="red" dx="1" dy="1" result="red_channel"/>
+			<feBlend mode="screen" in="red_channel" in2="blue_channel"/>
+		</filter>
+		<filter id="fisheye">
+            <feImage xlink:href="../../WEBP/fisheye.webp" result="lightMap" preserveAspectRatio="xMidYMid meet"/>
+            <feDisplacementMap in2="lightMap" in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale="100"/>
+        </filter>
+	</defs>
+</svg>
 </html>
