@@ -6,42 +6,60 @@
     <title>Test</title>
     <script src="aframe.min.js"></script>
     <script src="aframe-extras.min.js"></script>
-    <script src="https://supereggbert.github.io/aframe-htmlembed-component/dist/build.js"></script>
     <script src="frames.js"></script>
-    <!--<link rel="stylesheet" href="index.css">-->
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <a-scene vr-mode-ui="arEnabled: false" fog="type: exponential; color: black; density: 0.3"> <!--add "embedded" when ready for crt filter-->
-        <a-entity checkpoint i-frame position="0 0 0"></a-entity>
-            <!-- TODO: Make C-frame & O-Frame & fake-wall -->
-        <a-entity checkpoint i-frame position="-4 0 0"></a-entity>
-        <a-entity checkpoint t-frame position="0 0 -4"></a-entity>
-        <a-entity checkpoint t-frame position="-4 0 -4" rotation="0 90 0"></a-entity>
-        <a-entity checkpoint i-frame position="0 0 -8"></a-entity>
-        <a-entity
-            geometry="primitive: box; width: 1; height: 1; depth: 0.1"
-            position="-1 2 -1.5"
-            animation__float="property: position; to: -1 1.5 -1.5; dir: alternate; dur: 2000; loop: true">
+    <a-scene embedded vr-mode-ui="enabled: false" fog="type: linear; color: black; density: 0.1"> <!--add "embedded" when ready for crt filter-->
+
+        <a-assets>
+            <a-asset-item id="reflector" src="Reflector_halo_AdiXXioN_OBJ.obj"></a-asset-item>
+            <img id="wall" src="PNG/bricks.png">
+            <img id="column" src="PNG/floor.png">
+        </a-assets>
+
+        <!-- Row 1 -->
+        <a-entity id="0 0" l-frame position="0 0 0" rotation="0 180 0">
+            <!--<a-entity obj-model="obj: #reflector" material="color: #1a1a1a;" position="-1.8 3.62 -1.8" rotation="40 30 0"></a-entity>
+            <a-entity light="type: spot; intensity: 3; angle: 30; distance: 10; penumbra: 1; color: yellow;" position="-1.65 3.7 -1.55" rotation="230 30 0"></a-entity>
+            <a-entity light="type: point; intensity: 20; distance: 0.3; penumbra: 1; color: yellow;" position="-1.65 3.7 -1.55"></a-entity>-->
         </a-entity>
-        <a-entity
-            position="-1 2 -1.4"
-            animation__float="property: position; to: -1 1.5 -1.4; dir: alternate; dur: 2000; loop: true"
-            htmlembed>
-            <p style="width: 10em; height: 10em;">THIS IS A SIGN</p>
-        </a-entity>
-        <a-entity
-            position="1 2 -1.5"
-            htmlembed>
-            <p style="color: white; background: red; width: 10em; height: 10em;"><a href="#cool">LINK TEST</a></p>
-        </a-entity>
+        <a-entity i-frame position="4 0 0" rotation="0 90 0"></a-entity>
+        <a-entity i-frame position="8 0 0" rotation="0 90 0"></a-entity>
+        <a-entity t-frame position="12 0 0" rotation="0 90 0"></a-entity>
+        <a-entity i-frame position="16 0 0" rotation="0 90 0"></a-entity>
+        <a-entity i-frame position="20 0 0" rotation="0 90 0"></a-entity>
+        <a-entity l-frame position="24 0 0" rotation="0 90 0"></a-entity>
+        <a-entity c-frame position="28 0 0" rotation="0 90 0"></a-entity>
+
+        <!-- Row 2 -->
+        <a-entity i-frame position="0 0 4" rotation="0 0 0"></a-entity>
+        <a-entity l-frame position="4 0 4" rotation="0 180 0"></a-entity>
+        <a-entity l-frame position="8 0 4" rotation="0 90 0"></a-entity>
+        <a-entity i-frame position="12 0 4" rotation="0 0 0"></a-entity>
+        <a-entity i-frame position="16 0 4" rotation="0 0 0"></a-entity>
+        <a-entity i-frame position="20 0 4" rotation="0 0 0"></a-entity>
+        <a-entity i-frame position="24 0 4" rotation="0 0 0"></a-entity>
+        <a-entity i-frame position="28 0 4" rotation="0 0 0"></a-entity>
+
+        <!-- Row 3 -->
+        <a-entity i-frame position="0 0 8" rotation="0 0 0"></a-entity>
+        <a-entity c-frame position="4 0 8" rotation="0 270 0"></a-entity>
+        <a-entity i-frame position="8 0 8" rotation="0 0 0"></a-entity>
+        <a-entity c-frame position="12 0 8" rotation="0 270 0"></a-entity>
+        <a-entity c-frame position="16 0 8" rotation="0 180 0"></a-entity>
+        <a-entity o-frame position="20 0 8" rotation="0 0 0"></a-entity>
+        <a-entity t-frame position="24 0 8" rotation="0 0 0"></a-entity>
+        <a-entity i-frame position="28 0 8" rotation="0 0 0"></a-entity>
 
         <!-- Player Camera Rig with Light -->
-        <a-entity id="rig" position="0 1.6 0">
-            <a-camera position="0 0 0" camera="active: true; spectator: false;" look-controls="pointerLockEnabled:true" movement-controls="controls: checkpoint;" checkpoint-controls="mode: animate; animateSpeed: 20;" wasd-controls="enabled: false;">
+        <a-entity id="rig" position="0 2 0">
+            <a-camera position="0 0 0" camera fov="100" look-controls="pointerLockEnabled:true" movement-controls="controls: checkpoint;" checkpoint-controls="mode: animate; animateSpeed: 20;" wasd-controls="enabled: true;">
                 <a-cursor material="color: red; shader: flat;"></a-cursor>
-                <a-light type="point" color="white" intensity="2" distance="10"></a-light>
-              </a-camera> 
-        </a-entity>        
+                <a-entity light="type: spot; intensity: 0.5; angle: 90; distance: 40; penumbra: 1; color: pink;" position="0 0 0"></a-entity>
+                <a-entity light="type: spot; intensity: 1; angle: 50; distance: 10; penumbra: 1;" position="0 0 0"></a-entity>
+            </a-camera> 
+        </a-entity>
 
         <!-- Black Atmosphere -->
         <a-sky color="black"></a-sky>
@@ -66,7 +84,17 @@
 		</filter>
 		<filter id="fisheye">
             <feImage xlink:href="WEBP/fisheye.webp" result="lightMap" preserveAspectRatio="xMidYMid slice"/>
-            <feDisplacementMap in2="lightMap" in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale="100"/>
+            <feDisplacementMap in2="lightMap" in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale="120"/>
+        </filter>
+        <filter id="dither" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+            <feImage width="4" height="4" xlink:href="PNG/bayer.png"/>
+            <feTile/>
+            <feComposite operator="arithmetic" k1="0" k2="1" k3="1" k4="-0.2" in="SourceGraphic"/>
+            <feComponentTransfer>
+              <feFuncR type="discrete" tableValues="0 1"/>
+              <feFuncG type="discrete" tableValues="0 1"/>
+              <feFuncB type="discrete" tableValues="0 1"/>
+            </feComponentTransfer>
         </filter>
 	</defs>
 </svg>
