@@ -6,7 +6,7 @@ function createPlane(position, rotation, width, height, color, isFloor = false) 
     plane.setAttribute('width', width);
     plane.setAttribute('height', height);
     plane.setAttribute('color', color);
-    plane.setAttribute('material', 'src: #wall; magFilter: nearest; minFilter: nearest;');
+    plane.setAttribute('material', 'src: #rocks-img; normalMap: #rocks-map; metalness: 0.1;');
     if (isFloor) {
         // Add checkpoint attribute if it's a floor
         plane.setAttribute('checkpoint', '');
@@ -22,24 +22,25 @@ function createWall(position, rotation, width, height, depth, color) {
     wall.setAttribute('height', height);
     wall.setAttribute('depth', depth);
     wall.setAttribute('color', color);
-    wall.setAttribute('material', 'src: #wall; magFilter: nearest; minFilter: nearest;');
+    wall.setAttribute('material', 'src: #brickz-img; normalMap: #brickz-map; metalness: 0.1;');
     return wall;
 }
 
 function createColumn(position, color) {
     var column = document.createElement('a-cylinder');
     column.setAttribute('position', position);
-    column.setAttribute('radius', '0.1');
+    column.setAttribute('radius', '0.3');
     column.setAttribute('height', '4');
     column.setAttribute('color', color);
+    column.setAttribute('material', 'src: #bricks-img; normalMap: #bricks-map; repeat: 1 3; normalTextureRepeat: 1 3; metalness: 0.1;');
     return column;
 }
 
 // Standardized colors
-var floorColor = 'none';  // Color for floors
-var wallColor = 'none';  // Color for walls
-var ceilingColor = 'none';  // Color for ceilings
-var columnColor = 'maroon';  // Color for columns
+var floorColor = 'black';  // Color for floors
+var wallColor = '#2e0000';  // Color for walls
+var ceilingColor = '#2e0000';  // Color for ceilings
+var columnColor = '#2e0000';  // Color for columns
 
 // I-Frame Component
 AFRAME.registerComponent('i-frame', {

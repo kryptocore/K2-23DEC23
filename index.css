@@ -16,7 +16,7 @@ html {
     min-height: 100svh;
     margin: 0;
     overflow: hidden;
-    filter: url('#chromatic-aberration') url('#dither') ;
+    filter: url('#chromatic-aberration') url('#dither');
 }
 
 body {

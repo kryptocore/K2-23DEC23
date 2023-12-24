@@ -10,19 +10,23 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <a-scene embedded vr-mode-ui="enabled: false" fog="type: linear; color: black; density: 0.1"> <!--add "embedded" when ready for crt filter-->
+    <a-scene embedded vr-mode-ui="enabled: false" fog="type: exponential; color: black; density: 0.2"> <!--add "embedded" when ready for crt filter-->
 
         <a-assets>
-            <a-asset-item id="reflector" src="Reflector_halo_AdiXXioN_OBJ.obj"></a-asset-item>
-            <img id="wall" src="PNG/bricks.png">
-            <img id="column" src="PNG/floor.png">
+            <a-asset-item id="reflector" src="OBJ/reflector.obj"></a-asset-item>
+            <img id="bricks-map" src="PNG/bricks_0007_normal_opengl_1k.png">
+            <img id="bricks-img" src="JPG/bricks_0007_ao_1k.jpg">
+            <img id="brickz-map" src="PNG/bricks_0019_normal_opengl_1k.png">
+            <img id="brickz-img" src="JPG/bricks_0019_ao_1k.jpg">
+            <img id="rocks-map" src="PNG/rock_0007_normal_opengl_1k.png">
+            <img id="rocks-img" src="JPG/rock_0007_ao_1k.jpg">
         </a-assets>
 
         <!-- Row 1 -->
         <a-entity id="0 0" l-frame position="0 0 0" rotation="0 180 0">
-            <!--<a-entity obj-model="obj: #reflector" material="color: #1a1a1a;" position="-1.8 3.62 -1.8" rotation="40 30 0"></a-entity>
-            <a-entity light="type: spot; intensity: 3; angle: 30; distance: 10; penumbra: 1; color: yellow;" position="-1.65 3.7 -1.55" rotation="230 30 0"></a-entity>
-            <a-entity light="type: point; intensity: 20; distance: 0.3; penumbra: 1; color: yellow;" position="-1.65 3.7 -1.55"></a-entity>-->
+            <a-entity obj-model="obj: #reflector" material="color: #1a1a1a;" position="-1.8 3.62 -1.8" rotation="40 30 0"></a-entity>
+            <a-entity light="type: spot; intensity: 4; angle: 30; distance: 10; penumbra: 1;" position="-1.65 3.7 -1.55" rotation="230 30 0"></a-entity>
+            <a-entity light="type: point; intensity: 20; distance: 0.3; penumbra: 1;" position="-1.65 3.7 -1.55"></a-entity>
         </a-entity>
         <a-entity i-frame position="4 0 0" rotation="0 90 0"></a-entity>
         <a-entity i-frame position="8 0 0" rotation="0 90 0"></a-entity>
@@ -54,10 +58,10 @@
 
         <!-- Player Camera Rig with Light -->
         <a-entity id="rig" position="0 2 0">
-            <a-camera position="0 0 0" camera fov="100" look-controls="pointerLockEnabled:true" movement-controls="controls: checkpoint;" checkpoint-controls="mode: animate; animateSpeed: 20;" wasd-controls="enabled: true;">
-                <a-cursor material="color: red; shader: flat;"></a-cursor>
-                <a-entity light="type: spot; intensity: 0.5; angle: 90; distance: 40; penumbra: 1; color: pink;" position="0 0 0"></a-entity>
-                <a-entity light="type: spot; intensity: 1; angle: 50; distance: 10; penumbra: 1;" position="0 0 0"></a-entity>
+            <a-camera position="0 0 0" camera fov="100" look-controls="pointerLockEnabled:true" movement-controls="controls: checkpoint;" checkpoint-controls="mode: animate; animateSpeed: 5;" wasd-controls="enabled: false;">
+                <a-cursor material="color: white; shader: flat;"></a-cursor>
+                <a-entity light="type: spot; intensity: 2; angle: 90; distance: 20; penumbra: 0.9; color: #fffeee;" position="0 0 0"></a-entity>
+                <a-entity light="type: spot; intensity: 2; angle: 30; distance: 5; penumbra: 1; color: #fffeee;" position="0 0 0"></a-entity>
             </a-camera> 
         </a-entity>
 
@@ -91,8 +95,8 @@
             <feTile/>
             <feComposite operator="arithmetic" k1="0" k2="1" k3="1" k4="-0.2" in="SourceGraphic"/>
             <feComponentTransfer>
-              <feFuncR type="discrete" tableValues="0 1"/>
-              <feFuncG type="discrete" tableValues="0 1"/>
+              <feFuncR type="discrete" tableValues="0 0.8"/>
+              <feFuncG type="discrete" tableValues="0 0.9"/>
               <feFuncB type="discrete" tableValues="0 1"/>
             </feComponentTransfer>
         </filter>
