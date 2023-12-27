@@ -4,17 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test</title>
-    <script src="aframe.min.js"></script>
-    <script src="aframe-extras.min.js"></script>
-    <script src="physx.js"></script>
+    <!-- the AFrame library and 3rd party components -->
+        <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.2/dist/aframe-master.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.0.0/dist/components/sphere-collider.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.0.0/dist/aframe-extras.controls.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/c-frame/physx@v0.1.0/dist/physx.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls@0.4.3/dist/aframe-blink-controls.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/handy-work@3.1.10/build/handy-controls.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/handy-work@3.1.10/build/magnet-helpers.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/aframe-htmlmesh@2.0.1/build/aframe-html.min.js"></script>
+        <script src="xr-boilerplate/ar-shadow-helper.js"></script>
+        <script src="xr-boilerplate/ar-cursor.js"></script>
+        <script src="xr-boilerplate/simple-navmesh-constraint.js"></script>
+        <script src="xr-boilerplate/model-utils.js"></script>
+
+        <script src="xr-boilerplate/main.js"></script>
 
     <script src="maze.js"></script>
-    <script src="controls.js"></script>
+
+    <!--<script>
+        // WebXR requires https: to work so ensure redirected if needed.
+        if (location.hostname !== 'localhost' && window.location.protocol === 'http:') window.location.protocol = 'https:';
+    </script>-->
     
     <!-- <link rel="stylesheet" href="index.css"> -->
 </head>
 <body class="flex-center">
-    <a-scene physx="autoLoad: true; wasmUrl: ./physx.release.wasm;"> <!--add "embedded" when ready for crt filter | fog="type: exponential; color: black; density: 0.2" style="position: fixed;" vr-mode-ui="enabled: false"-->
+    <a-scene 
+        physx="autoLoad: true; delay: 500; wasmUrl: ./physx.release.wasm;"
+        webxr="overlayElement:#dom-overlay;"
+        reflection="directionalLight:#dirlight;"> <!--add "embedded" when ready for crt filter | fog="type: exponential; color: black; density: 0.2" style="position: fixed;" vr-mode-ui="enabled: false"-->
 
         <a-assets>
             <a-asset-item id="ermine" src="GLB/ermine_statue.glb"></a-asset-item>
@@ -29,15 +49,11 @@
         <!-- Row 1 -->
                                 <!-- "X"⬎  (2D)  ⬐"Y" -->
         <a-entity physx-body="type: static" x-hallway position="   0   0   0">
-            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="0 1 -1.3a"></a-entity>
-            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="0.7 1 -1.3"></a-entity>
-            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="-0.7 1 -1.3"></a-entity>
-            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="-0.27 2.2 -1.3"></a-entity>
-            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="0.27 2.2 -1.3"></a-entity>
+            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="0 0.4 -1"></a-entity>
         </a-entity>
 
         <!-- Player Camera Rig with Light -->
-        <a-entity id="rig" position="0 2 0">
+        <a-entity id="rig" position="0 1.6 0">
             <a-camera position="0 0 0" camera fov="100" look-controls="pointerLockEnabled: true;" movement-controls="controls: checkpoint;" checkpoint-controls="mode: animate; animateSpeed: 5;" wasd-controls="enabled: true;">
                 <a-cursor material="color: white; shader: flat;"></a-cursor>
                 <a-entity light="type: spot; intensity: 2; angle: 90; distance: 20; penumbra: 0.9; color: #fffeee;" position="0 0 0"></a-entity>
