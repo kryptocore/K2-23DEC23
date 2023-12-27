@@ -24,8 +24,8 @@ body {
     background: var(--background);
     color: var(--foreground);
     position: fixed;
-    width: 90vh;
-    height: 90vh;
+    width: 80vh;
+    height: 80vh;
     overflow: hidden;
     border-radius: 2vh;
     filter: url('#fisheye');
@@ -43,3 +43,8 @@ body {
 }
 
 .modal:not(:target) { display: none; }
+
+.modal:target {
+    display: block;
+    /* Other styling for visible state */
+}

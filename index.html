@@ -6,67 +6,46 @@
     <title>Test</title>
     <script src="aframe.min.js"></script>
     <script src="aframe-extras.min.js"></script>
-    <script src="frames.js"></script>
-    <link rel="stylesheet" href="index.css">
+    <script src="physx.js"></script>
+
+    <script src="maze.js"></script>
+    <script src="controls.js"></script>
+    
+    <!-- <link rel="stylesheet" href="index.css"> -->
 </head>
-<body>
-    <a-scene embedded vr-mode-ui="enabled: false" fog="type: exponential; color: black; density: 0.2"> <!--add "embedded" when ready for crt filter-->
+<body class="flex-center">
+    <a-scene physx="autoLoad: true; wasmUrl: ./physx.release.wasm;"> <!--add "embedded" when ready for crt filter | fog="type: exponential; color: black; density: 0.2" style="position: fixed;" vr-mode-ui="enabled: false"-->
 
         <a-assets>
-            <a-asset-item id="reflector" src="OBJ/reflector.obj"></a-asset-item>
+            <a-asset-item id="ermine" src="GLB/ermine_statue.glb"></a-asset-item>
             <img id="bricks-map" src="PNG/bricks_0007_normal_opengl_1k.png">
             <img id="bricks-img" src="JPG/bricks_0007_ao_1k.jpg">
             <img id="brickz-map" src="PNG/bricks_0019_normal_opengl_1k.png">
             <img id="brickz-img" src="JPG/bricks_0019_ao_1k.jpg">
             <img id="rocks-map" src="PNG/rock_0007_normal_opengl_1k.png">
-            <img id="rocks-img" src="JPG/rock_0007_ao_1k.jpg">
+            <img id="rocks-img" src="JPG/rock_0007_ao_1k.jpg">            
         </a-assets>
 
         <!-- Row 1 -->
-        <a-entity id="0 0" l-frame position="0 0 0" rotation="0 180 0">
-            <a-entity obj-model="obj: #reflector" material="color: #1a1a1a;" position="-1.8 3.62 -1.8" rotation="40 30 0"></a-entity>
-            <a-entity light="type: spot; intensity: 4; angle: 30; distance: 10; penumbra: 1;" position="-1.65 3.7 -1.55" rotation="230 30 0"></a-entity>
-            <a-entity light="type: point; intensity: 20; distance: 0.3; penumbra: 1;" position="-1.65 3.7 -1.55"></a-entity>
+                                <!-- "X"⬎  (2D)  ⬐"Y" -->
+        <a-entity physx-body="type: static" x-hallway position="   0   0   0">
+            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="0 1 -1.3a"></a-entity>
+            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="0.7 1 -1.3"></a-entity>
+            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="-0.7 1 -1.3"></a-entity>
+            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="-0.27 2.2 -1.3"></a-entity>
+            <a-entity gltf-model="#ermine" physx-body="type: dynamic" position="0.27 2.2 -1.3"></a-entity>
         </a-entity>
-        <a-entity i-frame position="4 0 0" rotation="0 90 0"></a-entity>
-        <a-entity i-frame position="8 0 0" rotation="0 90 0"></a-entity>
-        <a-entity t-frame position="12 0 0" rotation="0 90 0"></a-entity>
-        <a-entity i-frame position="16 0 0" rotation="0 90 0"></a-entity>
-        <a-entity i-frame position="20 0 0" rotation="0 90 0"></a-entity>
-        <a-entity l-frame position="24 0 0" rotation="0 90 0"></a-entity>
-        <a-entity c-frame position="28 0 0" rotation="0 90 0"></a-entity>
-
-        <!-- Row 2 -->
-        <a-entity i-frame position="0 0 4" rotation="0 0 0"></a-entity>
-        <a-entity l-frame position="4 0 4" rotation="0 180 0"></a-entity>
-        <a-entity l-frame position="8 0 4" rotation="0 90 0"></a-entity>
-        <a-entity i-frame position="12 0 4" rotation="0 0 0"></a-entity>
-        <a-entity i-frame position="16 0 4" rotation="0 0 0"></a-entity>
-        <a-entity i-frame position="20 0 4" rotation="0 0 0"></a-entity>
-        <a-entity i-frame position="24 0 4" rotation="0 0 0"></a-entity>
-        <a-entity i-frame position="28 0 4" rotation="0 0 0"></a-entity>
-
-        <!-- Row 3 -->
-        <a-entity i-frame position="0 0 8" rotation="0 0 0"></a-entity>
-        <a-entity c-frame position="4 0 8" rotation="0 270 0"></a-entity>
-        <a-entity i-frame position="8 0 8" rotation="0 0 0"></a-entity>
-        <a-entity c-frame position="12 0 8" rotation="0 270 0"></a-entity>
-        <a-entity c-frame position="16 0 8" rotation="0 180 0"></a-entity>
-        <a-entity o-frame position="20 0 8" rotation="0 0 0"></a-entity>
-        <a-entity t-frame position="24 0 8" rotation="0 0 0"></a-entity>
-        <a-entity i-frame position="28 0 8" rotation="0 0 0"></a-entity>
 
         <!-- Player Camera Rig with Light -->
         <a-entity id="rig" position="0 2 0">
-            <a-camera position="0 0 0" camera fov="100" look-controls="pointerLockEnabled:true" movement-controls="controls: checkpoint;" checkpoint-controls="mode: animate; animateSpeed: 5;" wasd-controls="enabled: false;">
+            <a-camera position="0 0 0" camera fov="100" look-controls="pointerLockEnabled: true;" movement-controls="controls: checkpoint;" checkpoint-controls="mode: animate; animateSpeed: 5;" wasd-controls="enabled: true;">
                 <a-cursor material="color: white; shader: flat;"></a-cursor>
                 <a-entity light="type: spot; intensity: 2; angle: 90; distance: 20; penumbra: 0.9; color: #fffeee;" position="0 0 0"></a-entity>
-                <a-entity light="type: spot; intensity: 2; angle: 30; distance: 5; penumbra: 1; color: #fffeee;" position="0 0 0"></a-entity>
+                <a-entity light="type: spot; intensity: 2; angle: 40; distance: 5; penumbra: 0.3; color: #fffeee;" position="0 0 0"></a-entity>
             </a-camera> 
         </a-entity>
 
-        <!-- Black Atmosphere -->
-        <a-sky color="black"></a-sky>
+        <a-sky color="blue"></a-sky>
     </a-scene>
 </body>
 <svg color-interpolation-filters="sRGB" viewBox="0 0 0 0">
