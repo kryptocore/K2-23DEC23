@@ -22,7 +22,7 @@
     <!-- Maze Generation -->
         <script src="maze.js"></script>
 
-    <!-- Filters (testing) -->
+    <!-- Filters (testing). The pixelation look scool and also cancer on the eyes lol -->
         <!--<script src="https://cdn.jsdelivr.net/gh/akbartus/A-Frame-Component-Postprocessing/dist/post-processing.min.js"></script>-->
 
     <link rel="stylesheet" href="index.css">
@@ -30,24 +30,28 @@
     </style>
 </head>
 <body class="flex-center">
-    <!--<div id="body-overlay">
+    <div id="body-overlay"><!-- Separate from the a-scene DOM, very important! -->
         <p class="typing">
-            PROJ: K2-23DEC23<br>
-            DESN: "The Krypt" (et al)<br>
-            * * * * *<br>
-            K2//"The Krypt" is a multimedia project representing the true and farcicle wills of the project lead, Cato, hereforeafter known as the "Kryptonaut".<br>
-            <br>
-            Pwwart of the FEGHN Initiative.
+            Immediate To-Do List:<br>
+            * Make ermine statue clickable (links to errormine indirectly)<br>
+            * Make ermine statue grabbable in VR<br>
+            * Make ermine statue grabbable in desktop<br>
+            * Reconfigure physics floor<br>
+            * Reconfigure ground plane (no more ankle-deep slop)<br>
+            * Change control behaivior to FPS-like for desktop <u>only</u><br>
         </p>
-    </div>-->
+    </div>
     <a-scene
+        id="scene"
         embedded
+        fog="type: exponential; color: black; density: 0.2"
         style="position: fixed;"
-        post-processing="effect: pixel; pixelParams: pixelSize: 4, normalEdgeStrength: 0.35, depthEdgeStrength: 0.4;"
+        post-processing="effect: pixel; pixelParams: pixelSize: 3, normalEdgeStrength: 0.35, depthEdgeStrength: 0.4;"
         physx="autoLoad: true; delay: 500; wasmUrl: ./physx.release.wasm;"
         webxr="overlayElement: #dom-overlay;"
         reflection="directionalLight: #dirlight;"
-        > <!--add "embedded" when ready for crt filter | fog="type: exponential; color: black; density: 0.2" style="position: fixed;" vr-mode-ui="enabled: false"-->
+        vr-mode-ui="enabled: true"
+        ><!-- TODO: vr-mode-ui toggle fix-->
 
         <a-assets>
             <a-asset-item id="ermine" src="GLB-GLTF/ermine_statue.glb"></a-asset-item>
@@ -59,39 +63,45 @@
             <img id="brickz-map" src="PNG/bricks_0019_normal_opengl_1k.png">
             <img id="brickz-img" src="JPG/bricks_0019_ao_1k.jpg">
             <img id="rocks-map" src="PNG/rock_0007_normal_opengl_1k.png">
-            <img id="rocks-img" src="JPG/rock_0007_ao_1k.jpg">            
+            <img id="rocks-img" src="JPG/rock_0007_ao_1k.jpg">
+            <a-mixin id="animations" animation__click="property: components.material.material.color; type: color; to: blue; startEvents: click; dur: 500;"></a-mixin>
+            <a-mixin id="blink" blink-controls="rotateOnTeleport: false; cameraRig: #cameraRig; teleportOrigin: #head; collisionEntities: .navmesh;"></a-mixin>
+            <a-mixin id="handle-visual" geometry="width:0.05; height:0.05; depth:0.2;"></a-mixin>            
         </a-assets>
 
-        <!-- Row 1 -->                                    <!-- "X"⬎  (2D)  ⬐"Y" -->
-        <a-entity filter="value: grayscale(100%);" x-hallway position="   4  0  0"></a-entity>
+        <!-- Row 1 -->        <!-- "X"⬎  (2D)  ⬐"Y" -->
         <a-entity x-hallway position="   0  0  0"></a-entity>
-        <a-entity x-hallway position="  -4  0  0"></a-entity>
+        <a-entity y-hallway position="   0  0  0">
+            <a-gltf-model id="errormine" toggle-physics shadow="receive: false;" src="#ermine" position="0 0 0" rotation="0 45 0" physx-body-from-model="type:dynamic; mass:2;">
+                <a-entity 
+                    data-magnet-range="0.2,0.1,360,180" 
+                    data-pick-up="parent" 
+                    class="magnet-left magnet-right grabbable" 
+                    position="0 0.35 -0.35" 
+                    rotation="0 90 0">
+                </a-entity>
+            </a-gltf-model>
+        </a-entity>
+        <a-entity x-hallway position="  -8  0  0"></a-entity>
 
-        <!-- Player Camera Rig with Light -->
-        <!--<a-entity id="player" position="0 1.6 0">
-            <a-camera position="0 0 0" camera fov="100" look-controls="pointerLockEnabled: true;" movement-controls="controls: checkpoint;" checkpoint-controls="mode: animate; animateSpeed: 5;" wasd-controls="enabled: true;">
-                <a-cursor material="color: white; shader: flat;"></a-cursor>
-                <a-entity light="type: spot; intensity: 2; angle: 90; distance: 20; penumbra: 0.9; color: #fffeee;" position="0 0 0"></a-entity>
-            </a-camera> 
-        </a-entity>-->
-
-        <!-- Camera and hand tracking ripped straight from xr-boilerplate example ;) -->
+        <!-- Camera and hand tracking ripped straight from xr-boilerplate example project lol, I tried doing it on my own and... zoo wee mama... -->
         <a-entity
             id="cameraRig"
-            simple-navmesh-constraint="navmesh: .navmesh; fall: 0.5; height: 0; exclude: .navmesh-hole;"
-            movement-controls="speed:0.15;camera:#head;"
-            position="0 0 0" rotation="0 90 0" origin-on-ar-start
+            simple-navmesh-constraint="navmesh: .navmesh; fall: 0; height: 0; exclude: .navmesh-hole;"
+            movement-controls="speed: 0.15; camera: #head;"
+            position="1.8 0 1" rotation="0 80 0" origin-on-ar-start
             >
             <a-entity id="head"
                 camera="near: 0.01;"
                 look-controls="pointerLockEnabled: false"
                 position="0 1.65 0"
             >
-            <a-entity light="type: spot; intensity: 4; angle: 90; distance: 20; penumbra: 0.9; color: #fffeee;" position="0 0 0"></a-entity>
+                <a-entity light="type: spot; intensity: 1; angle: 90; distance: 20; penumbra: 0.9; color: white;" position="0 0 0"></a-entity>
+                <a-entity light="type: spot; intensity: 2; angle: 30; distance: 20; penumbra: 0.3; color: grey;" position="0 0 0"></a-entity>
             </a-entity>
       
             <!-- Hand tracking -->
-            <a-entity handy-controls="right: #right-gltf; materialOverride: right;" material="color: gold; metalness: 1; roughness: 0;">
+                <a-entity handy-controls="right: #right-gltf; materialOverride: right;" material="color: gold; metalness: 1; roughness: 0;">
                 
                 <!-- For screen space inputs like mobile AR -->
                 <a-torus radius="0.008" radius-tubular="0.001" material="shader:flat;color:blue" data-none="screen-0"></a-torus>
@@ -147,7 +157,68 @@
 
         <a-sky color="black"></a-sky>
     </a-scene>
-    <div id="dom-overlay"></div>
+    <div id="dom-overlay">
+        <!--<p class="typing">
+            Bee Movie
+            By Jerry Seinfeld
+
+            NARRATOR:
+            (Black screen with text; The sound of buzzing bees can be heard)
+            According to all known laws
+            of aviation,
+            :
+            there is no way a bee
+            should be able to fly.
+            :
+            Its wings are too small to get
+            its fat little body off the ground.
+            :
+            The bee, of course, flies anyway
+            :
+            because bees don't care
+            what humans think is impossible.
+            BARRY BENSON:
+            (Barry is picking out a shirt)
+            Yellow, black. Yellow, black.
+            Yellow, black. Yellow, black.
+            :
+            Ooh, black and yellow!
+            Let's shake it up a little.
+            JANET BENSON:
+            Barry! Breakfast is ready!
+            BARRY:
+            Coming!
+            :
+            Hang on a second.
+            (Barry uses his antenna like a phone)
+            :
+            Hello?
+            ADAM FLAYMAN:
+
+            (Through phone)
+            - Barry?
+            BARRY:
+            - Adam?
+            ADAM:
+            - Can you believe this is happening?
+            BARRY:
+            - I can't. I'll pick you up.
+            (Barry flies down the stairs)
+            :
+            MARTIN BENSON:
+            Looking sharp.
+            JANET:
+            Use the stairs. Your father
+            paid good money for those.
+            BARRY:
+            Sorry. I'm excited.
+            MARTIN:
+            Here's the graduate.
+            We're very proud of you, son.
+            :
+            A perfect report card, all B's.
+        </p>-->
+    </div>
     <!-- Scuffed typing effect script. -->
     <script>
         document.querySelectorAll('.typing').forEach(typingElement => {
@@ -206,17 +277,17 @@
             <feTile/>
             <feComposite operator="arithmetic" k1="0" k2="1" k3="1" k4="-0.2" in="SourceGraphic"/>
             <feComponentTransfer>
-              <feFuncR type="discrete" tableValues="0 0.5"/>
-              <feFuncG type="discrete" tableValues="0 0.5"/>
-              <feFuncB type="discrete" tableValues="0 0.5"/>
+              <feFuncR type="discrete" tableValues="0 1"/>
+              <feFuncG type="discrete" tableValues="0 1.6"/>
+              <feFuncB type="discrete" tableValues="0 1.6"/>
             </feComponentTransfer>
         </filter>
 
         <filter id="discrete" color-interpolation-filters="sRGB">
             <feComponentTransfer>
               <feFuncR type="discrete" tableValues="0 1"></feFuncR>
-              <feFuncG type="discrete" tableValues="0 1"></feFuncG>
-              <feFuncB type="discrete" tableValues="0 1"></feFuncB>
+              <feFuncG type="discrete" tableValues="0 1.6"></feFuncG>
+              <feFuncB type="discrete" tableValues="0 1.6"></feFuncB>
             </feComponentTransfer>
           </filter>
 

@@ -6,13 +6,14 @@ function createPlane(position, rotation, width, height, color, isFloor = false, 
     plane.setAttribute('width', width);
     plane.setAttribute('height', height);
     plane.setAttribute('color', color);
-    plane.setAttribute('material', 'src: #rocks-img; normalMap: #rocks-map; metalness: 0.1;');
+    // plane.setAttribute('material', 'src: #rocks-img; normalMap: #rocks-map; metalness: 0.1;');
     plane.setAttribute('physx-body', 'static');
     if (isFloor) {
-        //
+        // might deprecate this dunno yet
     }
     if (navMesh) {
         plane.setAttribute('class', 'navmesh'); // auto generate navmesh based on maze component
+        plane.setAttribute("visible", false);
     }
     return plane;
 }
@@ -42,7 +43,7 @@ function createColumn(position, color) {
 }
 
 // Standardized colors
-var floorColor = 'black';  // Color for floors
+var floorColor = '#360000';  // Color for floors
 var wallColor = '#2e0000';  // Color for walls
 var ceilingColor = '#2e0000';  // Color for ceilings
 var columnColor = '#2e0000';  // Color for columns
@@ -73,7 +74,7 @@ AFRAME.registerComponent('x-hallway', {
         this.el.appendChild(createColumn('2 2 -2', columnColor));
         this.el.appendChild(createColumn('-2 2 -2', columnColor));
             // Navmesh:
-            this.el.appendChild(createPlane('0 -0.1 0', '-90 0 0', '4', '3', 'green', false, true)); // TODO: make this less, I dunno, stupid? But hey it works aight.
+            this.el.appendChild(createPlane('0 0 0', '-90 0 0', '4', '3', 'none', false, true)); // TODO: make this less, I dunno, stupid? But hey it works aight.
     }
 });
 
