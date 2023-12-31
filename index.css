@@ -1,3 +1,17 @@
+/* Font Definitions */
+@font-face { 
+    font-family: 'UVGA'; 
+    src: url('WOFF/UVGA16.woff'); 
+}
+@font-face { 
+    font-family: 'J'; 
+    src: url('WOFF/jackeyfont.woff'); 
+}
+@font-face { 
+    font-family: 'FSBI'; 
+    src: url('WOFF/freeserifbolditalic.woff'); 
+}
+
 /* Root Variables */
 :root {
     --background: black;
@@ -5,7 +19,7 @@
     --foreground: white;
     --contrast: red;
     font-size: 2vh;
-    font-family: 'J', 'UVGA', 'Courier New', Courier, monospace;
+    font-family: 'UVGA', 'J', 'Courier New', Courier, monospace;
 }
 
 /* Global Styles */
@@ -44,7 +58,19 @@ body {
 
 .modal:not(:target) { display: none; }
 
-.modal:target {
-    display: block;
-    /* Other styling for visible state */
+#dom-overlay, #body-overlay {
+    z-index: 50;
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+    padding: 1.5em;
+    font-size: 1.5em;
 }
+
+.typing::after {
+    content: '█';
+    display: inline-block;
+    animation: cursor-blink 1s steps(2) infinite;
+}
+
+@keyframes cursor-blink { 0% { opacity: 0; } }

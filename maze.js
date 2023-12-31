@@ -1,5 +1,5 @@
 // Helper functions to create elements
-function createPlane(position, rotation, width, height, color, isFloor = false) {
+function createPlane(position, rotation, width, height, color, isFloor = false, navMesh = false) {
     var plane = document.createElement('a-plane');
     plane.setAttribute('position', position);
     plane.setAttribute('rotation', rotation);
@@ -7,10 +7,12 @@ function createPlane(position, rotation, width, height, color, isFloor = false) 
     plane.setAttribute('height', height);
     plane.setAttribute('color', color);
     plane.setAttribute('material', 'src: #rocks-img; normalMap: #rocks-map; metalness: 0.1;');
+    plane.setAttribute('physx-body', 'static');
     if (isFloor) {
-        plane.setAttribute('checkpoint', '')
-        plane.setAttribute('class', 'collidable'); // Add class for collision detection
-        plane.setAttribute('static-body', ''); // Make the floor a static physics body
+        //
+    }
+    if (navMesh) {
+        plane.setAttribute('class', 'navmesh'); // auto generate navmesh based on maze component
     }
     return plane;
 }
@@ -24,8 +26,7 @@ function createWall(position, rotation, width, height, depth, color) {
     wall.setAttribute('depth', depth);
     wall.setAttribute('color', color);
     wall.setAttribute('material', 'src: #brickz-img; normalMap: #brickz-map; metalness: 0.1;');
-        wall.setAttribute('class', 'collidable'); // Add class for collision detection
-        wall.setAttribute('static-body', ''); // Make the floor a static physics body
+    wall.setAttribute('physx-body', 'static');
     return wall;
 }
 
@@ -36,6 +37,7 @@ function createColumn(position, color) {
     column.setAttribute('height', '4');
     column.setAttribute('color', color);
     column.setAttribute('material', 'src: #bricks-img; normalMap: #bricks-map; repeat: 1 3; normalTextureRepeat: 1 3; metalness: 0.1;');
+    column.setAttribute('physx-body', 'static');
     return column;
 }
 
@@ -64,16 +66,14 @@ AFRAME.registerComponent('x-hallway', {
     init: function () {
         this.el.appendChild(createPlane('0 0 0', '-90 0 0', '4', '4', floorColor, true));
         this.el.appendChild(createPlane('0 4 0', '90 0 0', '4', '4', ceilingColor));
-        this.el.appendChild(createWall('0 2 -2', '0 90 0', '0.1', '4', '4', wallColor));
-        this.el.appendChild(createWall('0 2 2', '0 90 0', '0.1', '4', '4', wallColor));
+        this.el.appendChild(createWall('0 2 -2', '0 90 0', '0.2', '4', '4', wallColor));
+        this.el.appendChild(createWall('0 2 2', '0 90 0', '0.2', '4', '4', wallColor));
         this.el.appendChild(createColumn('2 2 2', columnColor));
         this.el.appendChild(createColumn('-2 2 2', columnColor));
         this.el.appendChild(createColumn('2 2 -2', columnColor));
         this.el.appendChild(createColumn('-2 2 -2', columnColor));
-
-        this.el.appendChild(createMarker('0 0.2 0'));
-        this.el.appendChild(createMarker('2 0.2 0'));
-        this.el.appendChild(createMarker('-2 0.2 0'));
+            // Navmesh:
+            this.el.appendChild(createPlane('0 -0.1 0', '-90 0 0', '4', '3', 'green', false, true)); // TODO: make this less, I dunno, stupid? But hey it works aight.
     }
 });
 
@@ -87,11 +87,6 @@ AFRAME.registerComponent('t-junct-n', {
         this.el.appendChild(createColumn('-2 2 2', columnColor));
         this.el.appendChild(createColumn('2 2 -2', columnColor));
         this.el.appendChild(createColumn('-2 2 -2', columnColor));
-
-        this.el.appendChild(createMarker('0 0.2 0'));
-        this.el.appendChild(createMarker('2 0.2 0'));
-        this.el.appendChild(createMarker('-2 0.2 0'));
-        this.el.appendChild(createMarker('0 0.2 -2'));
     }
 });
 
@@ -105,10 +100,5 @@ AFRAME.registerComponent('t-junct-w', {
         this.el.appendChild(createColumn('-2 2 2', columnColor));
         this.el.appendChild(createColumn('2 2 -2', columnColor));
         this.el.appendChild(createColumn('-2 2 -2', columnColor));
-
-        this.el.appendChild(createMarker('0 0.2 0'));
-        this.el.appendChild(createMarker('2 0.2 0'));
-        this.el.appendChild(createMarker('-2 0.2 0'));
-        this.el.appendChild(createMarker('0 0.2 -2'));
     }
 });
