@@ -16,7 +16,7 @@
 :root {
     --background: black;
     --midtone: grey;
-    --foreground: white;
+    --foreground: #adadad;
     --contrast: red;
     font-size: 2vh;
     font-family: 'UVGA', 'J', 'Courier New', Courier, monospace;
@@ -30,7 +30,7 @@ html {
     min-height: 100svh;
     margin: 0;
     overflow: hidden;
-    filter: url('#chromatic-aberration') url('#dither');
+    filter: url('#chromatic-aberration');
 }
 
 body {

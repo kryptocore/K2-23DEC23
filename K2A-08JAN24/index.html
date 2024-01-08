@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" class="flex-center">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝕋𝕙𝕖 𝕂𝕣𝕪𝕡𝕥 ۞</title>
+    <!-- A-Frame Library -->
+        <script src="aframe/aframe-master.min.js"></script>
+            <!-- Maybe include aframe-environment-component? -->
+        <script src="aframe/aframe-extras.min.js"></script>
+        <script src="aframe/physx.js"></script>
+        <script src="aframe/aframe-blink-controls.min.js"></script>
+        <script src="aframe/handy-controls.min.js"></script>
+        <script src="aframe/magnet-helpers.min.js"></script>
+        <script src="aframe/aframe-html.min.js"></script>
+    <!-- A-Frame XR Boilerplate -->
+        <script src="xr-boilerplate/ar-shadow-helper.js"></script>
+        <script src="xr-boilerplate/ar-cursor.js"></script>
+        <script src="xr-boilerplate/simple-navmesh-constraint.js"></script>
+        <script src="xr-boilerplate/model-utils.js"></script>
+        <script src="xr-boilerplate/main.js"></script>
+    <!-- Maze Generation -->
+        <script src="maze.js"></script>
+
+    <!-- Filters (testing). The pixelation look scool and also cancer on the eyes lol -->
+        <!--<script src="https://cdn.jsdelivr.net/gh/akbartus/A-Frame-Component-Postprocessing/dist/post-processing.min.js"></script>-->
+
+    <link rel="stylesheet" href="index.css">
+    <style>
+    </style>
+</head>
+<body class="flex-center">
+    <div id="body-overlay"><!-- Separate from the a-scene DOM, very important! -->
+        <p class="typing">
+            Immediate To-Do List:<br>
+            * Make ermine statue clickable (links to errormine indirectly)<br>
+            * Make ermine statue grabbable in VR<br>
+            * Make ermine statue grabbable in desktop<br>
+            * Reconfigure physics floor<br>
+            * Reconfigure ground plane (no more ankle-deep slop)<br>
+            * Change control behaivior to FPS-like for desktop <u>only</u><br>
+        </p>
+    </div>
+    <a-scene
+        id="scene"
+        embedded
+        fog="type: exponential; color: black; density: 0.2"
+        style="position: fixed;"
+        post-processing="effect: pixel; pixelParams: pixelSize: 3, normalEdgeStrength: 0.35, depthEdgeStrength: 0.4;"
+        physx="autoLoad: true; delay: 500; wasmUrl: ./physx.release.wasm;"
+        webxr="overlayElement: #dom-overlay;"
+        reflection="directionalLight: #dirlight;"
+        vr-mode-ui="enabled: true"
+        ><!-- TODO: vr-mode-ui toggle fix-->
+
+        <a-assets>
+            <a-asset-item id="ermine" src="GLB-GLTF/ermine_statue.glb"></a-asset-item>
+            <a-asset-item id="right-gltf" src="GLB-GLTF/skeleton-right-hand-webxr.gltf"></a-asset-item>
+            <a-asset-item id="left-gltf" src="GLB-GLTF/skeleton-left-hand-webxr.gltf"></a-asset-item>
+            <a-asset-item id="watch-gltf" src="GLB-GLTF/watch.glb"></a-asset-item>
+            <img id="bricks-map" src="PNG/bricks_0007_normal_opengl_1k.png">
+            <img id="bricks-img" src="JPG/bricks_0007_ao_1k.jpg">
+            <img id="brickz-map" src="PNG/bricks_0019_normal_opengl_1k.png">
+            <img id="brickz-img" src="JPG/bricks_0019_ao_1k.jpg">
+            <img id="rocks-map" src="PNG/rock_0007_normal_opengl_1k.png">
+            <img id="rocks-img" src="JPG/rock_0007_ao_1k.jpg">
+            <a-mixin id="animations" animation__click="property: components.material.material.color; type: color; to: blue; startEvents: click; dur: 500;"></a-mixin>
+            <a-mixin id="blink" blink-controls="rotateOnTeleport: false; cameraRig: #cameraRig; teleportOrigin: #head; collisionEntities: .navmesh;"></a-mixin>
+            <a-mixin id="handle-visual" geometry="width:0.05; height:0.05; depth:0.2;"></a-mixin>            
+        </a-assets>
+
+        <!-- Row 1 -->        <!-- "X"⬎  (2D)  ⬐"Y" -->
+        <a-entity x-hallway position="   0  0  0"></a-entity>
+        <a-entity y-hallway position="   0  0  0">
+            <a-gltf-model id="errormine" toggle-physics shadow="receive: false;" src="#ermine" position="0 0 0" rotation="0 45 0" physx-body-from-model="type:dynamic; mass:2;">
+                <a-entity 
+                    data-magnet-range="0.2,0.1,360,180" 
+                    data-pick-up="parent" 
+                    class="magnet-left magnet-right grabbable" 
+                    position="0 0.35 -0.35" 
+                    rotation="0 90 0">
+                </a-entity>
+            </a-gltf-model>
+        </a-entity>
+        <a-entity x-hallway position="  -8  0  0"></a-entity>
+
+        <!-- Camera and hand tracking ripped straight from xr-boilerplate example project lol, I tried doing it on my own and... zoo wee mama... -->
+        <a-entity
+            id="cameraRig"
+            simple-navmesh-constraint="navmesh: .navmesh; fall: 0; height: 0; exclude: .navmesh-hole;"
+            movement-controls="speed: 0.15; camera: #head;"
+            position="1.8 0 1" rotation="0 80 0" origin-on-ar-start
+            >
+            <a-entity id="head"
+                camera="near: 0.01;"
+                look-controls="pointerLockEnabled: false"
+                position="0 1.65 0"
+            >
+                <a-entity light="type: spot; intensity: 1; angle: 90; distance: 20; penumbra: 0.9; color: white;" position="0 0 0"></a-entity>
+                <a-entity light="type: spot; intensity: 2; angle: 30; distance: 20; penumbra: 0.3; color: grey;" position="0 0 0"></a-entity>
+            </a-entity>
+      
+            <!-- Hand tracking -->
+                <a-entity handy-controls="right: #right-gltf; materialOverride: right;" material="color: gold; metalness: 1; roughness: 0;">
+                
+                <!-- For screen space inputs like mobile AR -->
+                <a-torus radius="0.008" radius-tubular="0.001" material="shader:flat;color:blue" data-none="screen-0"></a-torus>
+                <a-torus radius="0.008" radius-tubular="0.001" material="shader:flat;color:green" data-none="screen-1"></a-torus>
+                <a-torus radius="0.008" radius-tubular="0.001" material="shader:flat;color:red" data-none="screen-2"></a-torus>
+                
+                <!-- Put an exit button on the wrist for handtracking -->
+                <a-gltf-model src="#watch-gltf" data-left="wrist" position="-1000 0 0">
+                <a-sphere radius="0.02" position="0 0.02 0" sphere-collider="radius:0.02;objects:[data-right$=-tip];" exit-on="hitend" visible="false"></a-sphere>
+                </a-gltf-model>
+                
+                <!-- Add a golden ring on the finger -->
+                <a-entity data-left="ring-finger-phalanx-proximal">
+                    <a-torus position="0 0 -0.03" radius="0.008" radius-tubular="0.001" scale="1 1 1.5" material="color:gold;metalness:1;roughness:0;"></a-torus>
+                </a-entity>
+                
+                <!-- Use the finger tips for teleporting when the user points -->
+                <a-entity data-right="index-finger-tip" mixin="blink" blink-controls="snapTurn:false;startEvents:pose_point_fuseShort;endEvents:pose_point_fuseLong;cancelEvents:pose_cancel_point;"></a-entity>
+                <a-entity data-left="index-finger-tip"  mixin="blink" blink-controls="snapTurn:false;startEvents:pose_point_fuseShort;endEvents:pose_point_fuseLong;cancelEvents:pose_cancel_point;"></a-entity>
+
+                <!-- The direction hands are facing, we will also attach labels to show the currently detected pose or controller button -->
+                <!-- These also do teleportaion for Blink controls in VR -->
+                <a-entity data-right="ray" mixin="blink" cursor="" raycaster="objects:[html];far:0.3;showLine:false;lineColor:black;">
+                <a-entity position="0 0 -0.22" visible="false" class="pose-label" text="value: Hello World; align: center;"></a-entity>
+                </a-entity>
+                <a-entity data-left="ray" mixin="blink" cursor="" raycaster="objects:[html];far:0.3;showLine:false;lineColor:black;">
+                <a-entity position="0 0 -0.22" visible="false" class="pose-label" text="value: Hello World; align: center;"></a-entity>
+                </a-entity>
+                
+                <!-- These get drawn towards grabable objects, moving the whole hand and the attached elements-->
+                <a-entity id="left-magnet" data-left="grip"  data-magnet="magnet-left"  grab-magnet-target="startEvents:squeezestart,pose_fist;stopEvents:pose_flat_fuseShort,squeezeend;noMagnetEl:#left-no-magnet;"></a-entity>
+                <a-entity id="right-magnet" data-right="grip" data-magnet="magnet-right" grab-magnet-target="startEvents:squeezestart,pose_fist;stopEvents:pose_flat_fuseShort,squeezeend;noMagnetEl:#right-no-magnet;"></a-entity>
+            
+                <!-- markers to let us know the real location of the hands, you probably want to make them visible="false" or just make them empty <a-entities> -->
+                <a-entity id="left-no-magnet" data-left="grip" data-no-magnet>
+                <a-entity html="html:#my-interface;cursor:#cursor" position="-0.142 -0.0166 -0.02928" rotation="-80 90 0" scale="0.7 0.7 0.7"></a-entity>
+                </a-entity>
+                <a-entity id="right-no-magnet" data-right="grip" data-no-magnet></a-entity>
+                
+                <!-- Invisible objects at the tips of each finger for physics or intersections -->
+                <a-sphere data-right="index-finger-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-right="middle-finger-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-right="ring-finger-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-right="pinky-finger-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-right="thumb-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-left="index-finger-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-left="middle-finger-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-left="ring-finger-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-left="pinky-finger-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+                <a-sphere data-left="thumb-tip" radius="0.004" visible="false" physx-body="type: kinematic;"></a-sphere>
+            </a-entity>
+        </a-entity>
+
+        <a-sky color="black"></a-sky>
+    </a-scene>
+    <div id="dom-overlay">
+        <!--<p class="typing">
+            Bee Movie
+            By Jerry Seinfeld
+
+            NARRATOR:
+            (Black screen with text; The sound of buzzing bees can be heard)
+            According to all known laws
+            of aviation,
+            :
+            there is no way a bee
+            should be able to fly.
+            :
+            Its wings are too small to get
+            its fat little body off the ground.
+            :
+            The bee, of course, flies anyway
+            :
+            because bees don't care
+            what humans think is impossible.
+            BARRY BENSON:
+            (Barry is picking out a shirt)
+            Yellow, black. Yellow, black.
+            Yellow, black. Yellow, black.
+            :
+            Ooh, black and yellow!
+            Let's shake it up a little.
+            JANET BENSON:
+            Barry! Breakfast is ready!
+            BARRY:
+            Coming!
+            :
+            Hang on a second.
+            (Barry uses his antenna like a phone)
+            :
+            Hello?
+            ADAM FLAYMAN:
+
+            (Through phone)
+            - Barry?
+            BARRY:
+            - Adam?
+            ADAM:
+            - Can you believe this is happening?
+            BARRY:
+            - I can't. I'll pick you up.
+            (Barry flies down the stairs)
+            :
+            MARTIN BENSON:
+            Looking sharp.
+            JANET:
+            Use the stairs. Your father
+            paid good money for those.
+            BARRY:
+            Sorry. I'm excited.
+            MARTIN:
+            Here's the graduate.
+            We're very proud of you, son.
+            :
+            A perfect report card, all B's.
+        </p>-->
+    </div>
+    <!-- Scuffed typing effect script. -->
+    <script>
+        document.querySelectorAll('.typing').forEach(typingElement => {
+            let originalHTML = typingElement.innerHTML;
+            typingElement.innerHTML = '';
+            let tag = "";
+            let isTag = false;
+            let i = 0;
+
+            function typeWriter() {
+                if (i < originalHTML.length) {
+                    let char = originalHTML.charAt(i);
+                    if (char === '<') isTag = true;
+                    if (isTag) {
+                        tag += char;
+                        if (char === '>') {
+                            isTag = false;
+                            typingElement.innerHTML += tag;
+                            tag = "";
+                        }
+                    } else {
+                        typingElement.innerHTML += char;
+                    }
+                    i++;
+                    setTimeout(typeWriter, 50); // Adjust typing speed (in ms)
+                }
+            }
+
+            typeWriter();
+        });
+    </script>
+</body>
+<svg color-interpolation-filters="sRGB" viewBox="0 0 0 0">
+	<defs>
+		<filter id="chromatic-aberration">
+			<feColorMatrix type="matrix" in="SourceGraphic" result="blue" values="
+				0.000  0.000  0.000  0.000  0.000
+				0.000  1.000  0.000  0.000  0.000 
+				0.000  0.000  1.000  0.000  0.000 
+				0.000  0.000  0.000  1.000  0.000"/>
+			<feOffset in="blue" dx="-0.5" dy="-0.5" result="blue_channel"/>
+			<feColorMatrix type="matrix" in="SourceGraphic" result="red" values="
+				1.000  0.000  0.000  0.000  0.000
+				0.000  0.000  0.000  0.000  0.000 
+				0.000  0.000  0.000  0.000  0.000 
+				0.000  0.000  0.000  1.000  0.000"/>
+			<feOffset in="red" dx="0.5" dy="0.5" result="red_channel"/>
+			<feBlend mode="screen" in="red_channel" in2="blue_channel"/>
+		</filter>
+		<filter id="fisheye">
+            <feImage xlink:href="WEBP/fisheye.webp" result="lightMap" preserveAspectRatio="xMidYMid slice"/>
+            <feDisplacementMap in2="lightMap" in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale="120"/>
+        </filter>
+        <filter id="dither" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+            <feImage width="4" height="4" xlink:href="PNG/bayer.png"/>
+            <feTile/>
+            <feComposite operator="arithmetic" k1="0" k2="1" k3="1" k4="-0.2" in="SourceGraphic"/>
+            <feComponentTransfer>
+              <feFuncR type="discrete" tableValues="0 1"/>
+              <feFuncG type="discrete" tableValues="0 1.6"/>
+              <feFuncB type="discrete" tableValues="0 1.6"/>
+            </feComponentTransfer>
+        </filter>
+
+        <filter id="discrete" color-interpolation-filters="sRGB">
+            <feComponentTransfer>
+              <feFuncR type="discrete" tableValues="0 1"></feFuncR>
+              <feFuncG type="discrete" tableValues="0 1.6"></feFuncG>
+              <feFuncB type="discrete" tableValues="0 1.6"></feFuncB>
+            </feComponentTransfer>
+          </filter>
+
+          <filter id="gamma" color-interpolation-filters="sRGB">
+            <feComponentTransfer>
+              <feFuncR type="gamma" exponent="1.6"></feFuncR>
+              <feFuncG type="gamma" exponent="1.6"></feFuncG>
+              <feFuncB type="gamma" exponent="1.6"></feFuncB>
+            </feComponentTransfer>
+          </filter>
+	</defs>
+</svg>
+</html>
