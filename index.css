@@ -1,0 +1,97 @@
+/* Font Definitions */
+@font-face { 
+    font-family: 'UVGA'; 
+    src: url('WOFF/UVGA16.woff'); 
+}
+@font-face { 
+    font-family: 'J'; 
+    src: url('WOFF/jackeyfont.woff'); 
+}
+@font-face { 
+    font-family: 'FSBI'; 
+    src: url('WOFF/freeserifbolditalic.woff'); 
+}
+
+/* Root Variables */
+:root {
+    --background: black;
+    --midtone: grey;
+    --foreground: white;
+    --contrast: red;
+    font-size: 2vh;
+    font-family: 'UVGA', 'J', 'Courier New', Courier, monospace;
+}
+
+/* Global Styles */
+body {
+    background: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: 0;
+    overflow: hidden;
+    filter: url('#chromatic-aberration');
+}
+
+a-scene {
+    position: absolute!important; 
+        /* 
+            Father, forgive me for I have commited a grave transgression. 
+            I confess, I willingly commited the cardinal sin of !important, 
+            please allow me to repent, please forgive my tresspass. 
+            Amen. 
+        */
+    }
+
+#screen {
+    z-index: 1;
+    background: var(--background);
+    color: var(--foreground);
+    position: fixed;
+    width: 90vh;
+    height: 90vh;
+    overflow: hidden;
+    border: 0.5vh var(--foreground) solid;
+    border-radius: 2vh;
+    filter: url('#fisheye');
+    isolation: isolate;
+    & * { user-select: none; }
+}
+
+#GUI {
+    z-index: 2;
+    background: var(--background);
+    color: var(--foreground);
+    position: fixed;
+    width: 90%;
+    height: 90%;
+    overflow: hidden;
+    border: 0.5vh var(--foreground) solid;
+}
+
+#login {
+    z-index: 3;
+    position: absolute;
+    background: var(--foreground);
+    color: var(--background);
+    inset: 0;
+}
+
+#desktop {
+    z-index: 4;
+    position: absolute;
+    inset: 0;
+}
+
+.navmesh {
+    display: none;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.modal:not(:target) { display: none; }
