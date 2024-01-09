@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>𝕋𝕙𝕖 𝕂𝕣𝕪𝕡𝕥 ۞</title>
-    <!-- A-Frame Library -->
+            <!-- A-Frame Libraries -->
         <script src="JS/aframe-master.min.js"></script>
-            <!-- Maybe include aframe-environment-component? -->
         <script src="JS/aframe-extras.min.js"></script>
         <script src="JS/physx.js"></script>
-        <!--<script src="JS/aframe-blink-controls.min.js"></script>-->
-        <!--<script src="JS/handy-controls.min.js"></script>-->
-        <!--<script src="JS/magnet-helpers.min.js"></script>-->
-        <!--<script src="JS/aframe-html.min.js"></script>-->
-    <!-- TODO: >AFTER< the base site is up, work on XR environment. -->
         <script src="JS/XR/simple-navmesh-constraint.js"></script>
-        
-    <!-- Filters (testing). The pixelation look scool and also cancer on the eyes lol -->
+            <!-- Filters (testing). The pixelation look scool and also cancer on the eyes lol -->
         <script src="https://cdn.jsdelivr.net/gh/akbartus/A-Frame-Component-Postprocessing/dist/post-processing.min.js"></script>
-
         <script src="JS/maze.js"></script>
+        <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="JS/FeedEk.js"></script>
         <link rel="stylesheet" href="index.css">
 <body class="flex-center">
     <div id="screen" class="flex-center">
@@ -29,41 +23,62 @@
                 <a href="#desktop">> CLICK <</a>
             </div>
             <div id="desktop" class="modal">
-                <a-scene 
-                id="scene"
-                embedded
-                fog="type: exponential; color: black; density: 0.2"
-                style="position: fixed;"
-                post-processing="effect: pixel; pixelParams: pixelSize: 8, normalEdgeStrength: 1, depthEdgeStrength: 0.4;"
-                vr-mode-ui="enabled: false"
-                >
-                <!-- Add physics: physx="autoLoad: true; delay: 500; wasmUrl: ./physx.release.wasm;" -->
-
-                <a-assets>
-                    <br>        
-                </a-assets>
-
-                <!-- Row 1 -->
-                <a-entity y-hallway position="0  0  0"></a-entity>
-                <a-entity x-hallway position="0  0  0"></a-entity>
-
-                <!-- Camera -->
-                <a-entity
-                    id="cameraRig"
-                    simple-navmesh-constraint="navmesh: .navmesh; fall: 0; height: 0; exclude: .navmesh-hole;"
-                    movement-controls="speed: 0.15; camera: #head;"
-                    position="0 0 1" rotation="0 0 0" origin-on-ar-start>
-                    <a-entity id="head" camera look-controls="pointerLockEnabled: false" position="0 2 0">
-                        <a-entity light="type: spot; intensity: 2; angle: 90; distance: 20; penumbra: 0.9; color: white;" position="0 0 0"></a-entity>
-                        <a-entity light="type: spot; intensity: 4; angle: 30; distance: 20; penumbra: 0.3; color: grey;" position="0 0 0"></a-entity>
-                    </a-entity>
-                </a-entity>
-
-                <a-sky color="black"></a-sky>
-                </a-scene>  
+                <div id="a-frame">
+                    <a-scene 
+                        id="scene"
+                        embedded
+                        fog="type: exponential; color: black; density: 0.2"
+                        style="position: fixed;"
+                        post-processing="effect: pixel; pixelParams: pixelSize: 8, normalEdgeStrength: 1, depthEdgeStrength: 0.4;"
+                        vr-mode-ui="enabled: false"
+                        >
+                        <!-- Add physics: physx="autoLoad: true; delay: 500; wasmUrl: ./physx.release.wasm;" -->
+            
+                            <a-assets>
+                                <br>        
+                            </a-assets>
+            
+                            <!-- Row 1 -->
+                            <a-entity y-hallway position="0  0  0"></a-entity>
+                            <a-entity x-hallway position="0  0  0"></a-entity>
+            
+                            <!-- Camera -->
+                            <a-entity
+                                id="cameraRig"
+                                simple-navmesh-constraint="navmesh: .navmesh; fall: 0; height: 0; exclude: .navmesh-hole;"
+                                movement-controls="speed: 0.15; camera: #head;"
+                                position="0 0 1" rotation="0 0 0" origin-on-ar-start>
+                                <a-entity id="head" camera look-controls="pointerLockEnabled: false" position="0 2 0">
+                                    <a-entity light="type: spot; intensity: 2; angle: 90; distance: 20; penumbra: 0.9; color: white;" position="0 0 0"></a-entity>
+                                    <a-entity light="type: spot; intensity: 4; angle: 30; distance: 20; penumbra: 0.3; color: grey;" position="0 0 0"></a-entity>
+                                </a-entity>
+                            </a-entity>
+            
+                            <a-sky color="black"></a-sky>
+                    </a-scene>  
+                </div>
+                <div id="enkrypt">
+                    <div class="feedDiv">
+                        <p><strong>Poop feed 1</strong></p>
+                        <div id="divFeed"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+                $('#divFeed').FeedEk({
+                    FeedUrl: 'https://en.kry.pt/@naut.rss', 
+                    MaxCount: 3,
+                    ShowDesc : true,
+                    ShowPubDate:true,
+                    DescCharacterLimit:200,
+                    TitleLinkTarget:'_blank',
+                    DateFormat : 'ddMMMyyyyHHmm'
+                });
+        });
+    </script>
 </body>
 <svg color-interpolation-filters="sRGB" viewBox="0 0 0 0">
 	<defs>

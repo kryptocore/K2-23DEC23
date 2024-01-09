@@ -43,6 +43,20 @@ a-scene {
         */
     }
 
+#a-frame {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+}
+
+#enkrypt {
+    position: absolute;
+    background: red;
+    width: 50%;
+    height: 50%;
+    bottom: 0;
+}
+
 #screen {
     z-index: 1;
     background: var(--background);
